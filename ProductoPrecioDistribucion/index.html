@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjetas Interactivas - Estilo Apple</title>
+  
+  <!-- Tipografía Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --card-hover-border: rgba(255, 255, 255, 0.3);
+      --modal-bg: rgba(18, 24, 38, 0.75);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-cyan: #00779A;
+      --accent-teal: #054C50;
+      --accent-purple: #483C9A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fondo animado de luces */
+    .background-blobs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.45;
+      animation: float 18s infinite alternate ease-in-out;
+    }
+
+    .blob-1 {
+      width: 450px;
+      height: 450px;
+      background: var(--accent-purple);
+      top: -10%;
+      left: -10%;
+    }
+
+    .blob-2 {
+      width: 500px;
+      height: 500px;
+      background: var(--accent-teal);
+      bottom: -15%;
+      right: -10%;
+      animation-delay: -5s;
+    }
+
+    .blob-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--accent-cyan);
+      top: 40%;
+      left: 30%;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, -40px) scale(1.1); }
+      100% { transform: translate(-40px, 50px) scale(0.95); }
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    /* Encabezado */
+    .header-info {
+      text-align: center;
+      max-width: 650px;
+    }
+
+    .instruction-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.6rem 1.4rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #e5e7eb;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      animation: pulse-border 3s infinite alternate;
+    }
+
+    @keyframes pulse-border {
+      0% { border-color: rgba(255, 255, 255, 0.12); box-shadow: 0 0 10px rgba(0, 119, 154, 0.2); }
+      100% { border-color: rgba(0, 119, 154, 0.6); box-shadow: 0 0 25px rgba(0, 119, 154, 0.4); }
+    }
+
+    .instruction-badge i {
+      color: #38bdf8;
+    }
+
+    /* Rejilla de Tarjetas */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      width: 100%;
+    }
+
+    /* Estilo de Tarjeta Apple Glassmorphism */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+      pointer-events: none;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .glass-card:hover .card-footer {
+      color: #ffffff;
+    }
+
+    .card-footer i {
+      transition: transform 0.3s ease;
+    }
+
+    .glass-card:hover .card-footer i {
+      transform: translateX(5px);
+    }
+
+    /* Modal Emergente */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-container {
+      background: var(--modal-bg);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .modal-overlay.active .modal-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      font-weight: 300;
+    }
+
+    .modal-body p {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1.25rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Personalización del scroll interno del modal */
+    .modal-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .modal-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .modal-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-container {
+        padding: 1.5rem;
+      }
+      .modal-title {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Elementos animados de fondo -->
+  <div class="background-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="container">
+    
+    <!-- Indicación interactiva -->
+    <div class="header-info">
+      <div class="instruction-badge">
+        <i data-lucide="mouse-pointer-click"></i>
+        <span>Haga clic sobre las tarjetas para ampliar la información</span>
+      </div>
+    </div>
+
+    <!-- Rejilla de las 3 tarjetas -->
+    <div class="cards-grid">
+      
+      <!-- Tarjeta 1: Producto -->
+      <div class="glass-card" onclick="openModal('producto')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="package"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Producto</h2>
+          <div class="card-footer">
+            <span>Ver detalles</span>
+            <i data-lucide="arrow-right" size="16"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: Precio -->
+      <div class="glass-card" onclick="openModal('precio')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="tag"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Precio</h2>
+          <div class="card-footer">
+            <span>Ver detalles</span>
+            <i data-lucide="arrow-right" size="16"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3: Distribución -->
+      <div class="glass-card" onclick="openModal('distribucion')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="truck"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Distribución</h2>
+          <div class="card-footer">
+            <span>Ver detalles</span>
+            <i data-lucide="arrow-right" size="16"></i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Emergente Espectacular -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="card-icon" id="modalIcon">
+            <i data-lucide="info"></i>
+          </div>
+          <h3 class="modal-title" id="modalTitle">Título</h3>
+        </div>
+        <button class="close-btn" onclick="closeModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- El contenido detallado se carga dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inicializar iconos
+    lucide.createIcons();
+
+    // Información estructurada exacta de la imagen
+    const data = {
+      producto: {
+        title: "Producto",
+        icon: "package",
+        content: [
+          "El producto representa la propuesta de valor que la organización ofrece al mercado. Su definición va más allá de las características físicas de una edificación o infraestructura, y abarca los beneficios funcionales, económicos, ambientales, tecnológicos y experienciales que recibe el cliente. Por esta razón, la gestión del producto incluye decisiones sobre portafolio, los atributos de la oferta, los niveles del producto y las alternativas de diferenciación, innovación y adaptación frente a los cambios del mercado (Kotler, Keller & Chernev, 2022).",
+          "En las organizaciones del sector de la construcción, atributos como la calidad constructiva, el diseño, la ubicación, la funcionalidad, la sostenibilidad, la innovación tecnológica, la personalización y los servicios complementarios pueden incrementar el valor percibido. Asimismo, herramientas como BIM y PropTech, y certificaciones como LEED y EDGE, pueden convertirse en elementos de diferenciación cuando sus beneficios son reconocidos por el mercado y aportan valor a la oferta."
+        ]
+      },
+      precio: {
+        title: "Precio",
+        icon: "tag",
+        content: [
+          "El precio corresponde al valor económico asignado a un bien o servicio con efectos directos sobre los ingresos, la rentabilidad y la demanda. En su definición no solo se involucran los costos de producción o prestación del servicio, sino que también se consideran las condiciones del mercado, el tipo de cliente, el valor que este atribuye a la oferta y su disposición a pagar. Por ejemplo, la comercialización de una vivienda requiere criterios diferentes a los utilizados para establecer los honorarios de una consultoría, una interventoría, un servicio de diseño o una solución de mantenimiento.",
+          "De acuerdo con estas condiciones, las organizaciones pueden definir sus precios a partir de los costos, la competencia o el valor percibido, e incorporar alternativas de financiación, descuentos y otras condiciones comerciales según las características del mercado (Lozada, 2017)."
+        ]
+      },
+      distribucion: {
+        title: "Distribución",
+        icon: "truck",
+        content: [
+          "La distribución comprende el conjunto de decisiones relacionadas con la forma en la que los productos y servicios de una organización llegan al mercado y se hacen accesibles a sus clientes. Esta variable incluye la selección y administración de canales comerciales, intermediarios, puntos de contacto, plataformas digitales y mecanismos de relacionamiento utilizados para facilitar el intercambio entre la organización y sus mercados objetivo.",
+          "Las características de los canales dependen del tipo de cliente y de la naturaleza de la oferta. En el mercado inmobiliario residencial pueden utilizarse salas de ventas, asesores comerciales, agencias inmobiliarias, plataformas digitales y canales propios. En los mercados B2B e institucionales adquieren mayor importancia la venta directa, las licitaciones, los procesos de contratación, las alianzas empresariales y las relaciones comerciales de largo plazo. A su vez, la transformación digital y el desarrollo de plataformas PropTech han ampliado las posibilidades de interacción y comercialización, favoreciendo modelos que integran canales físicos y digitales (Kotler, Keller & Chernev, 2022)."
+        ]
+      }
+    };
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalIcon = document.getElementById('modalIcon');
+
+    function openModal(key) {
+      const item = data[key];
+      if (!item) return;
+
+      modalTitle.textContent = item.title;
+      modalIcon.innerHTML = `<i data-lucide="${item.icon}"></i>`;
+      
+      modalBody.innerHTML = item.content.map(p => `<p>${p}</p>`).join('');
+      
+      lucide.createIcons();
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnOverlay(e) {
+      if (e.target === modalOverlay) {
+        closeModal();
+      }
+    }
+
+    // Cerrar modal con la tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
