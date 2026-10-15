@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulos de Información Interactiva</title>
+    <!-- Tailwind CSS para diseño responsivo y estilizado -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0d1117;
+            font-family: 'Inter', sans-serif;
+            color: #f3f4f6;
+        }
+        /* Personalización de los botones circulares */
+        .btn-circle {
+            background-color: #054C50;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(5, 76, 80, 0.4);
+        }
+        .btn-circle:hover {
+            transform: scale(1.1);
+            background-color: #076b71;
+            box-shadow: 0 6px 20px rgba(7, 107, 113, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Cabecera de la Aplicación -->
+    <header class="w-full py-6 px-4 text-center">
+        <h1 class="text-2xl md:text-3xl font-bold tracking-wide text-teal-400">CONOCIMIENTOS PREVIOS</h1>
+        <p class="text-sm md:text-base text-gray-400 mt-2">Haga clic sobre los botones para ampliar la información</p>
+    </header>
+
+    <!-- Contenedor Principal (Distribución Circular) -->
+    <main class="flex-grow flex items-center justify-center p-4 relative my-8">
+        
+        <!-- Contenedor del Círculo -->
+        <div id="circle-container" class="relative w-[300px] h-[300px] md:w-[420px] md:h-[420px] rounded-full border border-teal-900/40 flex items-center justify-center">
+            
+            <!-- Núcleo Central Decorativo -->
+            <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#054C50]/20 border-2 border-[#054C50] flex flex-col items-center justify-center text-center p-2 shadow-inner">
+                <span class="text-xs md:text-sm font-semibold text-teal-300">Marketing Digital</span>
+            </div>
+
+            <!-- Botones colocados dinámicamente mediante JS o coordenadas CSS -->
+            <!-- Se distribuyen en 6 posiciones angulares en sentido horario -->
+            <!-- Botón 1 -->
+            <button onclick="openModal(1)" class="btn-circle absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl border-2 border-teal-300/30 focus:outline-none" style="top: 2%; left: 50%; transform: translate(-50%, 0);">
+                1
+            </button>
+            <!-- Botón 2 -->
+            <button onclick="openModal(2)" class="btn-circle absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl border-2 border-teal-300/30 focus:outline-none" style="top: 20%; right: 10%; transform: translate(0, 0);">
+                2
+            </button>
+            <!-- Botón 3 -->
+            <button onclick="openModal(3)" class="btn-circle absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl border-2 border-teal-300/30 focus:outline-none" style="bottom: 20%; right: 10%; transform: translate(0, 0);">
+                3
+            </button>
+            <!-- Botón 4 -->
+            <button onclick="openModal(4)" class="btn-circle absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl border-2 border-teal-300/30 focus:outline-none" style="bottom: 2%; left: 50%; transform: translate(-50%, 0);">
+                4
+            </button>
+            <!-- Botón 5 -->
+            <button onclick="openModal(5)" class="btn-circle absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl border-2 border-teal-300/30 focus:outline-none" style="bottom: 20%; left: 10%; transform: translate(0, 0);">
+                5
+            </button>
+            <!-- Botón 6 -->
+            <button onclick="openModal(6)" class="btn-circle absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl border-2 border-teal-300/30 focus:outline-none" style="top: 20%; left: 10%; transform: translate(0, 0);">
+                6
+            </button>
+
+        </div>
+    </main>
+
+    <!-- Ventana Modal (Popup) -->
+    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-teal-800 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative transform transition-all scale-95 opacity-0 duration-300" id="modal-content">
+            
+            <!-- Cabecera del Modal -->
+            <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-3">
+                <div class="flex items-center space-x-3">
+                    <span id="modal-number-badge" class="w-10 h-10 rounded-full bg-[#054C50] text-white flex items-center justify-center font-bold text-lg border border-teal-500/40">1</span>
+                    <h3 id="modal-title" class="text-xl font-bold text-teal-300">Información del Módulo</h3>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl font-bold focus:outline-none p-1">&times;</button>
+            </div>
+
+            <!-- Cuerpo del Texto -->
+            <p id="modal-text" class="text-gray-300 text-base md:text-lg leading-relaxed mb-6">
+                Contenido del modal aquí...
+            </p>
+
+            <!-- Pie de Modal -->
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="bg-[#054C50] hover:bg-teal-700 text-white font-semibold px-5 py-2 rounded-xl transition duration-200">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lógica JavaScript -->
+    <script>
+        // Base de datos de información extraída de la imagen (exacta y en orden de lectura)
+        const infoData = {
+            1: {
+                title: "Fundamentos de Marketing",
+                text: "Fundamentos de marketing asociados a segmentación de mercados, selección del mercado objetivo, comportamiento del cliente, posicionamiento y propuesta de valor."
+            },
+            2: {
+                title: "Costos y Finanzas Básicas",
+                text: "Conceptos básicos de costos y finanzas, incluyendo identificación de costos fijos, variables, directos e indirectos; margen y rentabilidad; así como nociones generales sobre flujo de caja y evaluación financiera que permitan interpretar las implicaciones económicas de las decisiones de precio."
+            },
+            3: {
+                title: "Conceptos Generales de Economía",
+                text: "Conceptos generales de economía, incluyendo nociones básicas de oferta, demanda, comportamiento del mercado y sensibilidad de los consumidores frente a variaciones en los precios, necesarias para comprender posteriormente la elasticidad-precio de la demanda."
+            },
+            4: {
+                title: "Sector Construcción e Inmobiliario",
+                text: "Características del sector de la construcción y del mercado inmobiliario a través del reconocimiento de las principales tipologías de productos y servicios del sector, actores que intervienen en su cadena de valor, características generales de los mercados residenciales, empresariales e institucionales y modalidades básicas de comercialización y contratación."
+            },
+            5: {
+                title: "Gestión de Organizaciones y Proyectos",
+                text: "Nociones generales sobre gestión de organizaciones y proyectos a través de la comprensión básica de la relación entre las decisiones organizacionales y el desarrollo de productos, servicios y soluciones de construcción, así como de las restricciones de tiempo, costo, alcance y calidad que pueden condicionar la oferta comercial."
+            },
+            6: {
+                title: "Herramientas de Análisis de Información",
+                text: "Herramientas básicas para el análisis de información, incluyendo el manejo elemental de hojas de cálculo para organizar datos, realizar cálculos, analizar información cuantitativa y desarrollar ejercicios básicos relacionados con costos, precios, demanda y rentabilidad."
+            }
+        };
+
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+        const modalNumberBadge = document.getElementById('modal-number-badge');
+
+        function openModal(id) {
+            const data = infoData[id];
+            if (data) {
+                modalNumberBadge.textContent = id;
+                modalTitle.textContent = data.title;
+                modalText.textContent = data.text;
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
