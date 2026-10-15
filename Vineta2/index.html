@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elasticidad Precio de la Demanda (|EPD|)</title>
+  <!-- Fuente Google Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
+
+    /* BARRA DE CONTROLES SUPERIOR */
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-control {
+      background-color: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .btn-control:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    /* CONTENEDOR PRINCIPAL DE TARJETAS */
+    .pills-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      width: 100%;
+      padding: 0 1rem;
+    }
+
+    /* TARJETA / PASTILLA (PILL) */
+    .pill-card {
+      background-color: #88C4C8; /* Color exacto del tono azul turquesa */
+      border-radius: 22px;
+      padding: 1.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(136, 196, 200, 0.25);
+      
+      /* Preparación para animación latigazo */
+      opacity: 0;
+      transform-origin: center left;
+      transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Animación de entrada estilo Latigazo (Whip Elastic) */
+    .pill-card.animate-in {
+      animation: whipIn 0.75s cubic-bezier(0.68, -0.6, 0.32, 1.6) forwards;
+    }
+
+    .pill-card:nth-child(1) { animation-delay: 0.08s; }
+    .pill-card:nth-child(2) { animation-delay: 0.22s; }
+    .pill-card:nth-child(3) { animation-delay: 0.36s; }
+
+    /* Efectos Hover y Active */
+    .pill-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      background-color: #7ab8bc;
+      box-shadow: 0 8px 20px rgba(136, 196, 200, 0.45);
+    }
+
+    .pill-card:active {
+      transform: translateY(-2px) scale(0.99);
+    }
+
+    /* TEXTO DE LA TARJETA */
+    .pill-text {
+      color: #0d1e25;
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    /* ANIMACIÓN LATIGAZO (WHIP EFFECT) */
+    @keyframes whipIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-120px) scaleX(1.6) scaleY(0.6) skewX(-20deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translateX(25px) scaleX(0.85) scaleY(1.15) skewX(10deg);
+      }
+      75% {
+        transform: translateX(-8px) scaleX(1.05) scaleY(0.95) skewX(-3deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) scaleX(1) scaleY(1) skewX(0deg);
+      }
+    }
+
+    /* RESPONSIVO PARA PANTALLAS PEQUEÑAS */
+    @media (max-width: 850px) {
+      .pills-container {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        gap: 1.25rem;
+      }
+
+      .pill-card {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .pill-text {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CONTROLES DE SONIDO Y REPETICIÓN -->
+  <div class="controls-bar">
+    <button class="btn-control" id="toggleSoundBtn">
+      <span id="soundIcon">🔊</span> <span id="soundLabel">Sonido Activado</span>
+    </button>
+    <button class="btn-control" id="replayBtn">
+      🔄 Reproducir Animación
+    </button>
+  </div>
+
+  <!-- CONTENEDOR DE LAS 3 VIÑETAS -->
+  <div class="pills-container">
+    <div class="pill-card animate-in" data-index="0">
+      <p class="pill-text">|EPD|&gt;1: demanda elástica.</p>
+    </div>
+
+    <div class="pill-card animate-in" data-index="1">
+      <p class="pill-text">|EPD|=1: demanda de elasticidad unitaria.</p>
+    </div>
+
+    <div class="pill-card animate-in" data-index="2">
+      <p class="pill-text">|EPD|&lt;1: demanda inelástica</p>
+    </div>
+  </div>
+
+  <script>
+    // SISTEMA DE AUDIO DIGITAL SINTETIZADO (Web Audio API)
+    let audioCtx = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type, pitchMultiplier = 1) {
+      if (isMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'hover') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const baseFreq = 320 * pitchMultiplier;
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.15, now + 0.08);
+
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } 
+      else if (type === 'click') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440 * pitchMultiplier, now);
+        osc.frequency.exponentialRampToValueAtTime(880 * pitchMultiplier, now + 0.12);
+
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.12);
+      }
+      else if (type === 'whip') {
+        // Sonido rápido de latigazo de entrada
+        const notes = [220, 587.33, 880];
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const noteTime = now + (idx * 0.12);
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, noteTime);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.5, noteTime + 0.1);
+
+          gain.gain.setValueAtTime(0, noteTime);
+          gain.gain.linearRampToValueAtTime(0.05, noteTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.12);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(noteTime);
+          osc.stop(noteTime + 0.12);
+        });
+      }
+    }
+
+    // EVENTOS INTERACTIVOS EN LAS TARJETAS
+    const cards = document.querySelectorAll('.pill-card');
+
+    cards.forEach((card, index) => {
+      // Hover Sound
+      card.addEventListener('mouseenter', () => {
+        playSound('hover', 1 + (index * 0.15));
+      });
+
+      // Click Sound
+      card.addEventListener('click', () => {
+        playSound('click', 1 + (index * 0.2));
+      });
+    });
+
+    // REPRODUCIR ANIMACIÓN DE LATIGAZO
+    const replayBtn = document.getElementById('replayBtn');
+    replayBtn.addEventListener('click', () => {
+      initAudio();
+      playSound('whip');
+
+      cards.forEach(card => {
+        card.classList.remove('animate-in');
+        // Forzar reflow para reiniciar la animación CSS
+        void card.offsetWidth;
+        card.classList.add('animate-in');
+      });
+    });
+
+    // BOTÓN DE MUTE / UNMUTE
+    const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    const soundLabel = document.getElementById('soundLabel');
+
+    toggleSoundBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      if (isMuted) {
+        soundIcon.textContent = '🔇';
+        soundLabel.textContent = 'Silenciado';
+        toggleSoundBtn.style.opacity = '0.7';
+      } else {
+        soundIcon.textContent = '🔊';
+        soundLabel.textContent = 'Sonido Activado';
+        toggleSoundBtn.style.opacity = '1';
+        initAudio();
+        playSound('hover', 1.2);
+      }
+    });
+
+    // Inicializar audio al interactuar por primera vez
+    window.addEventListener('click', () => {
+      initAudio();
+    }, { once: true });
+  </script>
+</body>
+</html>
