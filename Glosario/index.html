@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario Interactivo - Canales, Precios y Estrategia Comercial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* --- VARIABLES DE COLOR --- */
+        :root {
+            --primary-brand: #054C50;
+            --primary-hover: #04393b;
+            --bg-light: #ececec;
+            --text-dark: #333333;
+            --white: #ffffff;
+            --disabled-gray: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+            background-size: 10px 10px;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- PANTALLA INICIAL (PORTADA) --- */
+        .welcome-screen {
+            background: var(--white);
+            width: 100%;
+            max-width: 650px;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(5, 76, 80, 0.12);
+            text-align: center;
+            position: absolute;
+            transition: all 0.4s ease-in-out;
+            border-top: 6px solid var(--primary-brand);
+            z-index: 10;
+        }
+
+        .welcome-badge {
+            background-color: rgba(5, 76, 80, 0.08);
+            color: var(--primary-brand);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .welcome-screen h1 {
+            color: var(--text-dark);
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+        }
+
+        .welcome-screen h1 span {
+            color: var(--primary-brand);
+            display: block;
+        }
+
+        .welcome-screen p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0 auto 35px auto;
+            max-width: 480px;
+        }
+
+        .start-btn {
+            background-color: var(--primary-brand);
+            color: var(--white);
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(5, 76, 80, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            outline: none;
+        }
+
+        .start-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 76, 80, 0.4);
+        }
+
+        .welcome-screen.hidden-screen {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        /* --- CONTENEDOR DEL GLOSARIO --- */
+        .glossary-widget {
+            width: 100%;
+            max-width: 900px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            position: absolute;
+        }
+
+        .glossary-widget.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        .instruction-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .instruction-badge {
+            background-color: var(--primary-brand);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse-attention 2s infinite;
+        }
+
+        @keyframes pulse-attention {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(5, 76, 80, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(5, 76, 80, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(5, 76, 80, 0); }
+        }
+
+        .glossary-header {
+            background-color: var(--primary-brand);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .glossary-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .glossary-body {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start; 
+        }
+
+        .tabs-container {
+            display: flex;
+            flex-direction: column;
+            width: 140px;
+            flex-shrink: 0;
+            background-color: var(--primary-brand);
+            border-radius: 15px;
+            padding: 10px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px; 
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--white);
+            border: none;
+            padding: 15px 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-light);
+            color: var(--primary-brand);
+            border-radius: 5px 0 0 5px;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            background-color: var(--bg-light);
+            border-radius: 15px;
+            padding: 40px;
+            min-height: 450px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .definition-item {
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 5px solid var(--primary-brand);
+        }
+
+        .definition-item h3 {
+            color: var(--primary-brand);
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .definition-item p {
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+            text-align: left;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-group.animate-in .definition-item {
+            animation: slideUpFade 0.5s ease-out forwards;
+            opacity: 0; 
+        }
+
+        .content-group.animate-in .definition-item:nth-child(1) { animation-delay: 0.1s; }
+        .content-group.animate-in .definition-item:nth-child(2) { animation-delay: 0.2s; }
+        .content-group.animate-in .definition-item:nth-child(3) { animation-delay: 0.3s; }
+        .content-group.animate-in .definition-item:nth-child(4) { animation-delay: 0.4s; }
+        .content-group.animate-in .definition-item:nth-child(5) { animation-delay: 0.5s; }
+        .content-group.animate-in .definition-item:nth-child(6) { animation-delay: 0.6s; }
+        .content-group.animate-in .definition-item:nth-child(7) { animation-delay: 0.7s; }
+
+        @media (max-width: 768px) {
+            body { align-items: flex-start; padding: 20px 10px; }
+            .glossary-body { flex-direction: column; }
+            .tabs-container { width: 100%; flex-direction: row; position: static; }
+            .tab-btn { flex: 1; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
+            .tab-btn.active { border-radius: 10px 10px 0 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA INICIAL (PORTADA) -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-badge">Recurso Interactivo</div>
+        <h1>Glosario de la Unidad <span>Canales, Precios y Estrategia Comercial</span></h1>
+        <p>Explora los conceptos clave sobre canales de distribución, fijación de precios, mercados B2B/B2C y propuestas de valor de forma interactiva.</p>
+        <button class="start-btn" onclick="startGlossary()">
+            Iniciar Recurso <span>➔</span>
+        </button>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DEL GLOSARIO -->
+    <div class="glossary-widget" id="glossaryWidget">
+        <div class="instruction-wrapper">
+            <div class="instruction-badge">
+                <span>👆</span> Haga Clic sobre los botones para ampliar la información
+            </div>
+        </div>
+
+        <div class="glossary-header">
+            <h2>Glosario de Canales, Precios y Estrategia Comercial</h2>
+        </div>
+
+        <div class="glossary-body">
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="filterContent('A-F', this)">A – F</button>
+                <button class="tab-btn" onclick="filterContent('G-P', this)">G – P</button>
+                <button class="tab-btn" onclick="filterContent('Q-Z', this)">Q – Z</button>
+            </div>
+
+            <div class="content-area">
+                <!-- Grupo A – F -->
+                <div class="content-group animate-in" id="group-A-F">
+                    <div class="definition-item">
+                        <h3>Canal de distribución</h3>
+                        <p>Mecanismo mediante el cual una organización facilita el acceso de sus clientes a los productos o servicios ofrecidos, pudiendo utilizar canales directos, indirectos o combinaciones de ambos.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Canal directo</h3>
+                        <p>Modalidad de distribución en la que la organización comercializa su oferta directamente con el cliente, sin la participación de intermediarios comerciales independientes.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Canal indirecto</h3>
+                        <p>Modalidad de distribución en la que intervienen agentes, corredores, inmobiliarias u otros intermediarios para facilitar el acceso de la oferta al mercado.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Costo objetivo (Target costing)</h3>
+                        <p>Costo máximo admisible para desarrollar un producto o servicio después de considerar el precio aceptable para el mercado y el margen requerido por la organización.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Diferenciación del producto</h3>
+                        <p>Estrategia competitiva orientada a dotar un proyecto, activo inmobiliario o servicio de características únicas que generen ventajas competitivas y mayor valor percibido por el cliente.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Elasticidad-precio de la demanda</h3>
+                        <p>Indicador que mide el grado de respuesta de la demanda ante cambios en el precio de un producto o servicio, facilitando la toma de decisiones comerciales y de posicionamiento.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Fijación de precios basada en costos (Cost-Plus Pricing)</h3>
+                        <p>Método que determina el precio a partir de los costos asociados al producto o servicio, adicionando posteriormente un margen de utilidad.</p>
+                    </div>
+                </div>
+
+                <!-- Grupo G – P -->
+                <div class="content-group hidden" id="group-G-P">
+                    <div class="definition-item">
+                        <h3>Fijación de precios basada en el valor percibido</h3>
+                        <p>Enfoque que establece el precio considerando principalmente el valor que el mercado objetivo atribuye a los beneficios proporcionados por la oferta y su disposición a pagar.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Mercado B2B</h3>
+                        <p>Mercado en el que una empresa vende productos o servicios a otras organizaciones.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Mercado B2C</h3>
+                        <p>Mercado en el que una empresa vende productos o servicios directamente al consumidor final.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Omnicanalidad</h3>
+                        <p>Integración coordinada de diferentes canales y puntos de contacto físicos y digitales para facilitar una experiencia continua del cliente durante su relación con la organización.</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Pricing estratégico</h3>
+                        <p>Proceso de definición de precios basado en el valor percibido por el cliente, el posicionamiento competitivo, las condiciones del mercado y los objetivos estratégicos de la organización, más allá del simple cálculo de costos.</p>
+                    </div>
+                </div>
+
+                <!-- Grupo Q – Z -->
+                <div class="content-group hidden" id="group-Q-Z">
+                    <div class="definition-item">
+                        <h3>Propuesta de valor</h3>
+                        <p>Conjunto de beneficios y soluciones tangibles e intangibles que una empresa constructora ofrece a sus clientes para satisfacer sus necesidades, diferenciando sus productos y servicios frente a la competencia (Kotler, Dirección de mercadotecnia, 2006).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Valor percibido</h3>
+                        <p>Evaluación que realiza el cliente sobre los beneficios que obtiene de un producto o servicio en relación con los costos económicos, funcionales y emocionales asociados a su adquisición.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function startGlossary() {
+        const welcome = document.getElementById('welcomeScreen');
+        const glossary = document.getElementById('glossaryWidget');
+        
+        welcome.classList.add('hidden-screen');
+        glossary.classList.add('show');
+    }
+
+    function filterContent(groupId, btnElement) {
+        const groups = document.querySelectorAll('.content-group');
+        groups.forEach(group => {
+            group.classList.add('hidden');
+            group.classList.remove('animate-in');
+        });
+
+        const selectedGroup = document.getElementById('group-' + groupId);
+        if (selectedGroup) {
+            selectedGroup.classList.remove('hidden');
+            void selectedGroup.offsetWidth; 
+            selectedGroup.classList.add('animate-in');
+        }
+
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
