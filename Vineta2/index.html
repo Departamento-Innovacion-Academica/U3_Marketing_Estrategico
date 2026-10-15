@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elasticidad Precio de la Demanda (|EPD|)</title>
-  <!-- Fuente Google Montserrat -->
+  <!-- Fuente Google Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -17,7 +17,7 @@
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #f8fafc;
       min-height: 100vh;
       display: flex;
@@ -32,7 +32,7 @@
     .controls-bar {
       display: flex;
       gap: 12px;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
     }
 
     .btn-control {
@@ -58,6 +58,23 @@
       transform: translateY(-1px);
     }
 
+    /* INSTRUCCIÓN PARA EL USUARIO */
+    .instruction-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #475569;
+      margin-bottom: 2rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 30px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
     /* CONTENEDOR PRINCIPAL DE TARJETAS */
     .pills-container {
       display: grid;
@@ -70,7 +87,7 @@
 
     /* TARJETA / PASTILLA (PILL) */
     .pill-card {
-      background-color: #88C4C8; /* Color exacto del tono azul turquesa */
+      background-color: #88C4C8;
       border-radius: 22px;
       padding: 1.75rem 1.5rem;
       display: flex;
@@ -81,7 +98,6 @@
       user-select: none;
       box-shadow: 0 4px 12px rgba(136, 196, 200, 0.25);
       
-      /* Preparación para animación latigazo */
       opacity: 0;
       transform-origin: center left;
       transition: box-shadow 0.3s ease, background-color 0.3s ease;
@@ -110,7 +126,7 @@
     /* TEXTO DE LA TARJETA */
     .pill-text {
       color: #0d1e25;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       line-height: 1.4;
     }
@@ -134,7 +150,96 @@
       }
     }
 
-    /* RESPONSIVO PARA PANTALLAS PEQUEÑAS */
+    /* ESTILOS DE LA VENTANA EMERGENTE (MODAL) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1000;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: #ffffff;
+      border-radius: 16px;
+      max-width: 650px;
+      width: 100%;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      position: relative;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: #f1f5f9;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 4px solid #007a87;
+      text-align: left;
+    }
+
+    /* ALINEACIÓN A LA IZQUIERDA */
+    .modal-body p {
+      font-size: 0.95rem;
+      color: #334155;
+      line-height: 1.65;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .modal-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* RESPONSIVO */
     @media (max-width: 850px) {
       .pills-container {
         grid-template-columns: 1fr;
@@ -164,6 +269,11 @@
     </button>
   </div>
 
+  <!-- INSTRUCCIÓN DE INTERACCIÓN -->
+  <p class="instruction-text">
+    <span>👇</span> Haga clic sobre los botones para ampliar la información
+  </p>
+
   <!-- CONTENEDOR DE LAS 3 VIÑETAS -->
   <div class="pills-container">
     <div class="pill-card animate-in" data-index="0">
@@ -179,7 +289,43 @@
     </div>
   </div>
 
+  <!-- VENTANA EMERGENTE (MODAL) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModalBtn">&times;</button>
+      <h2 class="modal-title" id="modalTitle">Título</h2>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
   <script>
+    // DATOS DE LAS VIÑETAS EXTRAÍDOS EXACTAMENTE DE LA IMAGEN
+    const detailsData = [
+      {
+        title: "Demanda elástica",
+        paragraphs: [
+          "Cuando |EPD|>1, la variación porcentual de la cantidad demandada es proporcionalmente mayor que la variación del precio. En estas condiciones, los clientes presentan una mayor sensibilidad frente a modificaciones del precio.",
+          "Esta situación implica especial precaución al implementar incrementos de precio, debido a que una reducción proporcionalmente mayor del volumen comercializado puede afectar los ingresos esperados. La existencia de numerosas alternativas similares, menores niveles de diferenciación, restricciones presupuestales de los compradores o facilidad para sustituir la oferta pueden contribuir a incrementar la sensibilidad al precio.",
+          "Por ejemplo, en algunos segmentos del mercado residencial donde la capacidad de pago constituye una restricción importante, una variación en el precio puede afectar la posibilidad de compra de parte de los hogares. Esto no significa que categorías como la Vivienda de Interés Social (VIS) o la Vivienda de Interés Prioritario (VIP) tengan necesariamente una demanda elástica. La sensibilidad al precio debe analizarse a partir de las condiciones y la información disponible para cada mercado."
+        ]
+      },
+      {
+        title: "Demanda de elasticidad unitaria",
+        paragraphs: [
+          "Demanda de elasticidad unitaria Cuando |EPD| = 1, el cambio porcentual en la cantidad demandada es igual al cambio porcentual en el precio. Este comportamiento se encuentra entre los casos de demanda elástica e inelástica.",
+          "Conocer la elasticidad también ayuda a analizar el efecto que puede tener una variación del precio sobre los ingresos. Cuando la demanda es elástica, un aumento del precio puede reducir los ingresos totales, ya que la cantidad demandada disminuye en una proporción mayor. Si la demanda es inelástica, un aumento moderado del precio puede producir el efecto contrario, siempre que la reducción de las ventas sea proporcionalmente menor (Pindyck & Rubinfeld, 2018)."
+        ]
+      },
+      {
+        title: "Demanda inelástica",
+        paragraphs: [
+          "Cuando |EPD| < 1, la cantidad demandada cambia en una proporción menor que el precio. En este caso, los compradores presentan una menor sensibilidad relativa ante sus variaciones.",
+          "Este comportamiento puede observarse cuando existen pocas alternativas similares o cuando ciertos atributos hacen que el cliente tenga una preferencia marcada por una oferta. En el sector de la construcción, una ubicación difícil de sustituir, determinadas características de diseño, la especialización técnica o algunos servicios asociados pueden influir en esta respuesta. La importancia de estos factores dependerá del producto y del segmento analizado.",
+          "Una demanda menos sensible al precio no implica que este pueda aumentarse sin límite. La respuesta de los compradores puede cambiar con la entrada de nuevos competidores, la aparición de productos sustitutos, una disminución de su capacidad adquisitiva o cambios en las condiciones económicas del mercado."
+        ]
+      }
+    ];
+
     // SISTEMA DE AUDIO DIGITAL SINTETIZADO (Web Audio API)
     let audioCtx = null;
     let isMuted = false;
@@ -235,7 +381,6 @@
         osc.stop(now + 0.12);
       }
       else if (type === 'whip') {
-        // Sonido rápido de latigazo de entrada
         const notes = [220, 587.33, 880];
         notes.forEach((freq, idx) => {
           const osc = audioCtx.createOscillator();
@@ -257,24 +402,76 @@
           osc.stop(noteTime + 0.12);
         });
       }
+      else if (type === 'close') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(261.63, now + 0.1);
+
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
     }
 
-    // EVENTOS INTERACTIVOS EN LAS TARJETAS
+    // ELEMENTOS DEL MODAL
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    function openModal(index) {
+      const data = detailsData[index];
+      if (!data) return;
+
+      modalTitle.textContent = data.title;
+      modalBody.innerHTML = data.paragraphs.map(p => `<p>${p}</p>`).join('');
+      modalOverlay.classList.add('active');
+      playSound('click', 1.2);
+    }
+
+    function closeModal() {
+      if (modalOverlay.classList.contains('active')) {
+        modalOverlay.classList.remove('active');
+        playSound('close');
+      }
+    }
+
+    // EVENTOS EN LAS TARJETAS / VIÑETAS
     const cards = document.querySelectorAll('.pill-card');
 
     cards.forEach((card, index) => {
-      // Hover Sound
       card.addEventListener('mouseenter', () => {
         playSound('hover', 1 + (index * 0.15));
       });
 
-      // Click Sound
       card.addEventListener('click', () => {
-        playSound('click', 1 + (index * 0.2));
+        openModal(index);
       });
     });
 
-    // REPRODUCIR ANIMACIÓN DE LATIGAZO
+    // EVENTOS PARA CERRAR EL MODAL
+    closeModalBtn.addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // BOTÓN PARA REPRODUCIR LA ANIMACIÓN DE LATIGAZO
     const replayBtn = document.getElementById('replayBtn');
     replayBtn.addEventListener('click', () => {
       initAudio();
@@ -282,7 +479,6 @@
 
       cards.forEach(card => {
         card.classList.remove('animate-in');
-        // Forzar reflow para reiniciar la animación CSS
         void card.offsetWidth;
         card.classList.add('animate-in');
       });
@@ -308,7 +504,6 @@
       }
     });
 
-    // Inicializar audio al interactuar por primera vez
     window.addEventListener('click', () => {
       initAudio();
     }, { once: true });
