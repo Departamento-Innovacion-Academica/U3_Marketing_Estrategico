@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrategias de Precios - Diagrama de 5 Pasos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8fafc;
+            color: #1a1a1a;
+        }
+
+        /* Forma de Flecha Chevron para 5 Pasos */
+        .chevron-arrow {
+            clip-path: polygon(
+                0% 0%, 
+                calc(100% - 18px) 0%, 
+                100% 50%, 
+                calc(100% - 18px) 100%, 
+                0% 100%, 
+                18px 50%
+            );
+            background-color: #007a87;
+            transition: background-color 0.3s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .chevron-arrow:hover {
+            background-color: #005f69;
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        .chevron-arrow:active {
+            transform: translateY(-1px) scale(0.99);
+            background-color: #004d55;
+        }
+
+        /* Sombra de Chevron */
+        .chevron-shadow {
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.08));
+            transition: filter 0.3s ease;
+        }
+
+        .step-container:hover .chevron-shadow {
+            filter: drop-shadow(0px 10px 15px rgba(0, 122, 135, 0.25));
+        }
+
+        /* Animación de entrada escalonada */
+        .animate-item {
+            opacity: 0;
+            transform: translateY(25px) scale(0.97);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-item.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Transición de Ventana Emergente Modal */
+        .modal-backdrop {
+            transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        .modal-content {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+
+        /* Botones de control */
+        .control-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .control-btn:hover {
+            transform: translateY(-2px);
+        }
+        .control-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-8 bg-slate-50 selection:bg-teal-100 selection:text-teal-800">
+
+    <!-- Header & Controles -->
+    <header class="w-full max-w-7xl mx-auto flex flex-wrap justify-between items-center py-4 gap-4">
+        <div class="flex items-center space-x-2.5">
+            <span class="inline-block w-3 h-3 rounded-full bg-[#007a87] animate-pulse"></span>
+            <span class="text-xs uppercase tracking-widest text-slate-500 font-bold">Estrategias de Precios</span>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <!-- Botón Mute/Unmute -->
+            <button id="soundToggleBtn" onclick="toggleSound()" class="control-btn flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold shadow-sm hover:border-teal-600 hover:text-[#007a87] focus:outline-none focus:ring-2 focus:ring-[#007a87]">
+                <svg id="soundIcon" class="w-4 h-4 text-[#007a87]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+                </svg>
+                <span id="soundStatusText">Sonido: Activado</span>
+            </button>
+
+            <!-- Botón Reiniciar Animación -->
+            <button onclick="triggerEntranceAnimation()" class="control-btn flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#007a87] text-white text-xs sm:text-sm font-semibold shadow-sm hover:bg-[#00606b] focus:outline-none focus:ring-2 focus:ring-[#007a87]">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span>Reiniciar Animación</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="w-full max-w-7xl mx-auto my-auto py-8 space-y-8">
+        
+        <!-- SECCIÓN DE DIAGRAMA EN 5 PASOS -->
+        <section aria-label="Estrategias de Precios en 5 Pasos">
+            <div class="flex items-center justify-between mb-6 px-1">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Estrategias y Objetivos de Precios</h2>
+                <span class="text-xs text-slate-400">Haz clic en cualquier flecha para ver el contenido completo</span>
+            </div>
+
+            <!-- Grid de 5 Pasos -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-2 items-start">
+
+                <!-- Paso 1 -->
+                <div 
+                    id="step-0" 
+                    class="step-container animate-item flex flex-col space-y-3 group cursor-pointer"
+                    onmouseenter="playHoverSound(300)"
+                    onclick="openModal(0)"
+                >
+                    <div class="chevron-shadow w-full">
+                        <div class="chevron-arrow h-16 sm:h-20 w-full flex items-center justify-center shadow-sm select-none">
+                            <span class="text-white text-2xl sm:text-3xl font-extrabold tracking-tight">1</span>
+                        </div>
+                    </div>
+                    <div class="px-2 space-y-1 transition-all duration-300 group-hover:translate-x-1">
+                        <h3 class="text-base font-bold text-slate-900 group-hover:text-[#007a87] transition-colors leading-snug">
+                            Maximización de la rentabilidad
+                        </h3>
+                        <p class="text-xs text-slate-600 font-normal leading-relaxed">
+                            Precios para alcanzar la rentabilidad esperada y retorno sobre recursos...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 2 -->
+                <div 
+                    id="step-1" 
+                    class="step-container animate-item flex flex-col space-y-3 group cursor-pointer"
+                    onmouseenter="playHoverSound(340)"
+                    onclick="openModal(1)"
+                >
+                    <div class="chevron-shadow w-full">
+                        <div class="chevron-arrow h-16 sm:h-20 w-full flex items-center justify-center shadow-sm select-none">
+                            <span class="text-white text-2xl sm:text-3xl font-extrabold tracking-tight">2</span>
+                        </div>
+                    </div>
+                    <div class="px-2 space-y-1 transition-all duration-300 group-hover:translate-x-1">
+                        <h3 class="text-base font-bold text-slate-900 group-hover:text-[#007a87] transition-colors leading-snug">
+                            Penetración del mercado
+                        </h3>
+                        <p class="text-xs text-slate-600 font-normal leading-relaxed">
+                            Precios competitivos para facilitar entrada a un segmento o adopción...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 3 -->
+                <div 
+                    id="step-2" 
+                    class="step-container animate-item flex flex-col space-y-3 group cursor-pointer"
+                    onmouseenter="playHoverSound(380)"
+                    onclick="openModal(2)"
+                >
+                    <div class="chevron-shadow w-full">
+                        <div class="chevron-arrow h-16 sm:h-20 w-full flex items-center justify-center shadow-sm select-none">
+                            <span class="text-white text-2xl sm:text-3xl font-extrabold tracking-tight">3</span>
+                        </div>
+                    </div>
+                    <div class="px-2 space-y-1 transition-all duration-300 group-hover:translate-x-1">
+                        <h3 class="text-base font-bold text-slate-900 group-hover:text-[#007a87] transition-colors leading-snug">
+                            Captura de valor
+                        </h3>
+                        <p class="text-xs text-slate-600 font-normal leading-relaxed">
+                            Oferta diferenciada orientada a capturar valor superior percibido...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 4 -->
+                <div 
+                    id="step-3" 
+                    class="step-container animate-item flex flex-col space-y-3 group cursor-pointer"
+                    onmouseenter="playHoverSound(420)"
+                    onclick="openModal(3)"
+                >
+                    <div class="chevron-shadow w-full">
+                        <div class="chevron-arrow h-16 sm:h-20 w-full flex items-center justify-center shadow-sm select-none">
+                            <span class="text-white text-2xl sm:text-3xl font-extrabold tracking-tight">4</span>
+                        </div>
+                    </div>
+                    <div class="px-2 space-y-1 transition-all duration-300 group-hover:translate-x-1">
+                        <h3 class="text-base font-bold text-slate-900 group-hover:text-[#007a87] transition-colors leading-snug">
+                            Incremento del volumen o rotación de la oferta
+                        </h3>
+                        <p class="text-xs text-slate-600 font-normal leading-relaxed">
+                            Vender con mayor rapidez aun con menor margen por unidad...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Paso 5 -->
+                <div 
+                    id="step-4" 
+                    class="step-container animate-item flex flex-col space-y-3 group cursor-pointer"
+                    onmouseenter="playHoverSound(460)"
+                    onclick="openModal(4)"
+                >
+                    <div class="chevron-shadow w-full">
+                        <div class="chevron-arrow h-16 sm:h-20 w-full flex items-center justify-center shadow-sm select-none">
+                            <span class="text-white text-2xl sm:text-3xl font-extrabold tracking-tight">5</span>
+                        </div>
+                    </div>
+                    <div class="px-2 space-y-1 transition-all duration-300 group-hover:translate-x-1">
+                        <h3 class="text-base font-bold text-slate-900 group-hover:text-[#007a87] transition-colors leading-snug">
+                            Sostenimiento de la operación
+                        </h3>
+                        <p class="text-xs text-slate-600 font-normal leading-relaxed">
+                            Ajustes temporales ante disminución de demanda o alta competencia...
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- VENTANA EMERGENTE (MODAL) -->
+    <div id="modalOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm opacity-0 pointer-events-none modal-backdrop" onclick="closeModalOnBackdrop(event)">
+        <div id="modalContainer" class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-8 border border-slate-100 transform scale-95 opacity-0 modal-content relative overflow-hidden">
+            
+            <!-- Barra lateral decorativa del modal -->
+            <div class="absolute top-0 left-0 w-2.5 h-full bg-[#007a87]"></div>
+
+            <div class="flex justify-between items-start gap-4 mb-4 pl-2">
+                <div>
+                    <span id="modalStepBadge" class="text-xs font-bold text-[#007a87] uppercase tracking-wider block mb-1">Estrategia 1</span>
+                    <h3 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug">
+                        <!-- Título dinámico -->
+                    </h3>
+                </div>
+                <button onclick="closeModal()" class="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="pl-2">
+                <p id="modalBody" class="text-slate-700 text-base sm:text-lg font-medium leading-relaxed">
+                    <!-- Texto completo dinámico -->
+                </p>
+            </div>
+
+            <div class="mt-8 flex justify-end pl-2">
+                <button onclick="closeModal()" class="px-6 py-2.5 rounded-xl bg-[#007a87] text-white text-sm font-semibold shadow hover:bg-[#00606b] transition-colors focus:outline-none">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-7xl mx-auto text-center text-xs text-slate-400 py-4">
+        Diagrama Interactivo de Estrategias de Precios
+    </footer>
+
+    <!-- SCRIPT DE DATOS, AUDIO Y NAVEGACIÓN -->
+    <script>
+        // DATOS DE LAS 5 ESTRATEGIAS
+        const strategiesData = [
+            {
+                stepNumber: 1,
+                title: "Maximización de la rentabilidad",
+                preview: "Precios para alcanzar la rentabilidad esperada y retorno sobre recursos...",
+                fullText: "La organización busca establecer precios que contribuyan a alcanzar los niveles esperados de rentabilidad y retorno sobre los recursos comprometidos. Este objetivo requiere equilibrar margen y volumen, debido a que un incremento del precio no necesariamente genera una mayor rentabilidad si ocasiona una reducción significativa de la demanda."
+            },
+            {
+                stepNumber: 2,
+                title: "Penetración del mercado",
+                preview: "Precios competitivos para facilitar entrada a un segmento o adopción...",
+                fullText: "La organización puede establecer precios competitivos con el propósito de facilitar la entrada a determinado segmento, incrementar rápidamente su participación o favorecer la adopción de una nueva oferta. Esta estrategia requiere disponer de una estructura de costos que permita sostener el precio y evitar que la reducción comprometa la rentabilidad en el largo plazo (Kotler, Keller & Chernev, 2022)."
+            },
+            {
+                stepNumber: 3,
+                title: "Captura de valor",
+                preview: "Oferta diferenciada orientada a capturar valor superior percibido...",
+                fullText: "Cuando la organización dispone de una oferta claramente diferenciada, puede orientar el precio hacia la captura del valor superior percibido por determinados segmentos. Estos pueden ser especialización técnica, diseño, personalización, sostenibilidad, entre otros (Hinterhuber & Liozu, 2016)."
+            },
+            {
+                stepNumber: 4,
+                title: "Incremento del volumen o rotación de la oferta",
+                preview: "Vender con mayor rapidez aun con menor margen por unidad...",
+                fullText: "En algunos mercados, la organización puede optar por vender con mayor rapidez, aun cuando esto implique obtener un margen menor por unidad. En el mercado inmobiliario, el precio puede ajustarse para facilitar la venta de las unidades disponibles y generar ingresos en un periodo más corto."
+            },
+            {
+                stepNumber: 5,
+                title: "Sostenimiento de la operación",
+                preview: "Ajustes temporales ante disminución de demanda o alta competencia...",
+                fullText: "Cuando disminuye la demanda o la organización enfrenta una fuerte competencia o dificultades económicas, el precio puede ajustarse temporalmente para mantener las ventas y disponer de los recursos necesarios para atender sus obligaciones. Esta estrategia tiene un alcance limitado, ya que mantener durante periodos prolongados precios que no permitan cubrir los costos y obtener una rentabilidad adecuada puede afectar la continuidad de la organización."
+            }
+        ];
+
+        // SINTETIZADOR WEB AUDIO API
+        let audioCtx = null;
+        let isMuted = false;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function toggleSound() {
+            isMuted = !isMuted;
+            const soundStatusText = document.getElementById('soundStatusText');
+            const soundIcon = document.getElementById('soundIcon');
+
+            if (isMuted) {
+                soundStatusText.textContent = "Sonido: Silenciado";
+                soundIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-dasharray="2 2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>`;
+            } else {
+                soundStatusText.textContent = "Sonido: Activado";
+                soundIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>`;
+                playHoverSound(440);
+            }
+        }
+
+        function playHoverSound(freq = 350) {
+            if (isMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.035, ctx.currentTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.16);
+            } catch (e) {}
+        }
+
+        function playClickSound(startFreq = 400) {
+            if (isMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(startFreq, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(startFreq * 1.4, ctx.currentTime + 0.1);
+
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.16);
+            } catch (e) {}
+        }
+
+        function playModalCloseSound() {
+            if (isMuted) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(450, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.12);
+
+                gain.gain.setValueAtTime(0.06, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        function playEntranceArpeggio() {
+            if (isMuted) return;
+            const notes = [261.63, 329.63, 392.00, 523.25, 659.25];
+            notes.forEach((freq, idx) => {
+                setTimeout(() => {
+                    playHoverSound(freq);
+                }, idx * 90 + 60);
+            });
+        }
+
+        // CONTROL DE MODAL (VENTANA EMERGENTE)
+        function openModal(index) {
+            const data = strategiesData[index];
+            if (!data) return;
+
+            playClickSound(520);
+
+            document.getElementById('modalStepBadge').textContent = `Estrategia ${data.stepNumber}`;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalBody').textContent = data.fullText;
+
+            const overlay = document.getElementById('modalOverlay');
+            const container = document.getElementById('modalContainer');
+
+            overlay.classList.remove('pointer-events-none');
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            playModalCloseSound();
+
+            const overlay = document.getElementById('modalOverlay');
+            const container = document.getElementById('modalContainer');
+
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }, 150);
+        }
+
+        function closeModalOnBackdrop(event) {
+            if (event.target.id === 'modalOverlay') {
+                closeModal();
+            }
+        }
+
+        // Cierre con la tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // ANIMACIÓN DE ENTRADA ESCALONADA
+        function triggerEntranceAnimation() {
+            const items = document.querySelectorAll('.animate-item');
+
+            items.forEach(item => {
+                item.classList.remove('visible');
+            });
+
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 100 + 100);
+            });
+
+            playEntranceArpeggio();
+        }
+
+        window.onload = function() {
+            setTimeout(() => {
+                triggerEntranceAnimation();
+            }, 100);
+        };
+    </script>
+</body>
+</html>
