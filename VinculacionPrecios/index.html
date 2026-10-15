@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Características del Sector Inmobiliario y Construcción</title>
+  
+  <!-- Tipografía Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --card-hover-border: rgba(56, 189, 248, 0.4);
+      --modal-bg: rgba(15, 22, 36, 0.82);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-cyan: #00779A;
+      --accent-teal: #054C50;
+      --accent-purple: #483C9A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif !important;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fondo animado de luces / orbes */
+    .background-blobs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      filter: blur(100px);
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: float 20s infinite alternate ease-in-out;
+    }
+
+    .blob-1 {
+      width: 500px;
+      height: 500px;
+      background: var(--accent-purple);
+      top: -10%;
+      left: -10%;
+    }
+
+    .blob-2 {
+      width: 550px;
+      height: 550px;
+      background: var(--accent-teal);
+      bottom: -15%;
+      right: -10%;
+      animation-delay: -6s;
+    }
+
+    .blob-3 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent-cyan);
+      top: 35%;
+      left: 30%;
+      animation-delay: -12s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(70px, -50px) scale(1.12); }
+      100% { transform: translate(-50px, 60px) scale(0.92); }
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    /* Encabezado */
+    .header-info {
+      text-align: center;
+      max-width: 750px;
+    }
+
+    .instruction-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 0.75rem 1.75rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #f3f4f6;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: pulse-border 3.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulse-border {
+      0% { border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 15px rgba(0, 119, 154, 0.2); }
+      100% { border-color: rgba(56, 189, 248, 0.6); box-shadow: 0 0 30px rgba(0, 119, 154, 0.45); }
+    }
+
+    .instruction-badge i {
+      color: #38bdf8;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    /* Rejilla de 4 Tarjetas en 2x2 */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      width: 100%;
+    }
+
+    /* Estilo de Tarjeta Apple Glassmorphism */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 2.75rem 2.25rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 240px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+      pointer-events: none;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.15);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover .card-icon {
+      transform: scale(1.1) rotate(-3deg);
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 1.75rem;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      transition: color 0.3s ease;
+    }
+
+    .glass-card:hover .card-footer {
+      color: #ffffff;
+    }
+
+    .action-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover .action-badge {
+      background: #38bdf8;
+      color: #000;
+      transform: translateX(4px);
+    }
+
+    /* Modal Emergente Espectacular */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-container {
+      background: var(--modal-bg);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border-radius: 32px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .modal-overlay.active .modal-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: rotate(90deg) scale(1.05);
+    }
+
+    .modal-body {
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: #e2e8f0;
+      font-weight: 300;
+    }
+
+    .modal-body p {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1.5rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    /* Personalización del scroll interno */
+    .modal-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .modal-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .modal-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    /* Responsividad */
+    @media (max-width: 868px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-container {
+        padding: 1.75rem;
+      }
+      .modal-title {
+        font-size: 1.3rem;
+      }
+      .card-title {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Elementos animados de fondo -->
+  <div class="background-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="container">
+    
+    <!-- Indicación interactiva -->
+    <div class="header-info">
+      <div class="instruction-badge">
+        <i data-lucide="mouse-pointer-click"></i>
+        <span>Haga clic sobre las tarjetas para ampliar la información</span>
+      </div>
+    </div>
+
+    <!-- Rejilla de 4 tarjetas en formato 2x2 -->
+    <div class="cards-grid">
+      
+      <!-- Tarjeta 1: Vinculación con el entorno -->
+      <div class="glass-card" onclick="openModal('entorno')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="map-pin"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Vinculación con el entorno:</h2>
+          <div class="card-footer">
+            <span>Ampliar detalles</span>
+            <div class="action-badge">
+              <i data-lucide="arrow-right" size="16"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: Alto compromiso económico -->
+      <div class="glass-card" onclick="openModal('economico')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="wallet"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Alto compromiso económico:</h2>
+          <div class="card-footer">
+            <span>Ampliar detalles</span>
+            <div class="action-badge">
+              <i data-lucide="arrow-right" size="16"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3: Periodos prolongados... -->
+      <div class="glass-card" onclick="openModal('periodos')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="clock"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Periodos prolongados entre la presentación de la oferta y su entrega:</h2>
+          <div class="card-footer">
+            <span>Ampliar detalles</span>
+            <div class="action-badge">
+              <i data-lucide="arrow-right" size="16"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 4: Integración de bienes y servicios -->
+      <div class="glass-card" onclick="openModal('integracion')">
+        <div class="card-top">
+          <div class="card-icon">
+            <i data-lucide="layers"></i>
+          </div>
+        </div>
+        <div>
+          <h2 class="card-title">Integración de bienes y servicios:</h2>
+          <div class="card-footer">
+            <span>Ampliar detalles</span>
+            <div class="action-badge">
+              <i data-lucide="arrow-right" size="16"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Emergente Espectacular -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="card-icon" id="modalIcon">
+            <i data-lucide="info"></i>
+          </div>
+          <h3 class="modal-title" id="modalTitle">Título</h3>
+        </div>
+        <button class="close-btn" onclick="closeModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Contenido extraído exactamente de la imagen -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inicializar iconos de Lucide
+    lucide.createIcons();
+
+    // Información exacta extraída de la imagen
+    const data = {
+      entorno: {
+        title: "Vinculación con el entorno:",
+        icon: "map-pin",
+        content: "Los productos inmobiliarios mantienen una relación directa con el territorio en el cual se encuentran, por lo que se considera su ubicación, accesibilidad, conectividad, disponibilidad de servicios, características del entorno y perspectivas de desarrollo urbano como atributos que condicionan su valor y atractivo comercial."
+      },
+      economico: {
+        title: "Alto compromiso económico:",
+        icon: "wallet",
+        content: "La compra o contratación de productos y servicios de construcción suele requerir una inversión considerable, tanto para personas como para empresas y entidades públicas. Por ello, el cliente tiende a evaluar con mayor cuidado las alternativas disponibles y a considerar factores como la calidad, la trayectoria y reputación de la organización, así como los riesgos asociados a su decisión."
+      },
+      periodos: {
+        title: "Periodos prolongados entre la presentación de la oferta y su entrega:",
+        icon: "clock",
+        content: "Algunos productos del sector requieren largos periodos para su desarrollo y comercialización. En ese tiempo pueden cambiar las condiciones económicas, la normativa, la tecnología o incluso las preferencias de los clientes, lo cual puede afectar las condiciones inicialmente previstas y hacer necesario el ajuste de la oferta durante el desarrollo del proyecto."
+      },
+      integracion: {
+        title: "Integración de bienes y servicios:",
+        icon: "layers",
+        content: "Parte de la oferta del sector combina componentes tangibles e intangibles. Una edificación puede complementarse con garantías, atención posventa, mantenimiento, administración, asesoría financiera o soluciones digitales, mientras que un servicio de ingeniería puede incorporar productos documentales, modelos digitales, diseños y acompañamiento técnico, lo cual puede ampliar las posibilidades de diferenciación y generación de valor (Best, 2000)."
+      }
+    };
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalIcon = document.getElementById('modalIcon');
+
+    function openModal(key) {
+      const item = data[key];
+      if (!item) return;
+
+      modalTitle.textContent = item.title;
+      modalIcon.innerHTML = `<i data-lucide="${item.icon}"></i>`;
+      modalBody.innerHTML = `<p>${item.content}</p>`;
+      
+      lucide.createIcons();
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnOverlay(e) {
+      if (e.target === modalOverlay) {
+        closeModal();
+      }
+    }
+
+    // Cerrar con la tecla ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
