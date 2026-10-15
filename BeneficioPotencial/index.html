@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niveles de Producto - Visor Interactivo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#050A10',        /* Deep dark background for maximal contrast */
+                            card: '#0F172A',      /* Slate 900 for high-contrast container */
+                            teal: '#0A5C60',
+                            cyan: '#0284C7',
+                            purple: '#5B4EB3',
+                            accent: '#00F0E6',    /* Bright teal for strong contrast highlights */
+                            textMain: '#F8FAFC',  /* Near white (Slate 50) for maximum contrast */
+                            textMuted: '#CBD5E1'  /* Slate 300 for highly readable secondary text */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050A10;
+            color: #F8FAFC;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Ambient glowing background */
+        .glow-bg {
+            background: radial-gradient(circle at 15% 15%, rgba(10, 92, 96, 0.4) 0%, rgba(91, 78, 179, 0.3) 45%, rgba(5, 10, 16, 1) 100%);
+        }
+
+        /* Smooth tab transition */
+        .content-panel {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .content-panel.hidden-panel {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /* Active tab button styling with strong visual feedback */
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0A5C60 0%, #0284C7 100%);
+            border-left-color: #00F0E6;
+            box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.5);
+            color: #FFFFFF;
+        }
+
+        .tab-btn.active .tab-number {
+            background-color: #00F0E6;
+            color: #050A10;
+            font-weight: 700;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0284C7;
+        }
+    </style>
+</head>
+<body class="min-h-screen glow-bg flex flex-col justify-between p-4 sm:p-6 md:p-10">
+
+    <!-- Header Section -->
+    <header class="max-w-7xl mx-auto w-full mb-8 text-center md:text-left">
+        <div class="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#00F0E6] bg-[#0A5C60]/40 rounded-full border border-[#00F0E6]/40 mb-3">
+            Estrategia de Producto & Marketing
+        </div>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
+            Los 5 Niveles de Producto
+        </h1>
+        <p class="mt-2 text-slate-100 text-base sm:text-lg max-w-3xl font-medium leading-relaxed drop-shadow-sm">
+            Explora la jerarquía de valor para el cliente basada en los conceptos teóricos de Kotler, Keller & Chernev.
+        </p>
+    </header>
+
+    <!-- Main Container Grid -->
+    <main class="max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Panel: Navigation Tabs -->
+        <nav class="lg:col-span-4 flex flex-col space-y-3 w-full" aria-label="Niveles de Producto">
+            
+            <!-- Prominent Instruction Box for User -->
+            <div class="bg-slate-900 border-2 border-brand-accent/50 rounded-xl p-4 flex items-center space-x-3 shadow-xl mb-2">
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-brand-accent/20 flex items-center justify-center text-brand-accent">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                    </svg>
+                </div>
+                <p class="text-xs sm:text-sm font-bold text-white leading-snug tracking-wide">
+                    Haga clic sobre los botones para ampliar la información
+                </p>
+            </div>
+
+            <button onclick="selectTab(0)" id="btn-0" class="tab-btn active text-left p-4 rounded-xl border-l-4 border-transparent bg-brand-card hover:bg-slate-800 transition-all duration-200 flex items-center space-x-4 group border border-slate-700/60">
+                <span class="tab-number flex-shrink-0 w-8 h-8 rounded-lg bg-slate-800 text-brand-textMuted group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                    1
+                </span>
+                <span class="font-semibold text-sm sm:text-base text-white group-hover:text-brand-accent leading-snug">
+                    Beneficio central o producto básico
+                </span>
+            </button>
+
+            <button onclick="selectTab(1)" id="btn-1" class="tab-btn text-left p-4 rounded-xl border-l-4 border-transparent bg-brand-card hover:bg-slate-800 transition-all duration-200 flex items-center space-x-4 group border border-slate-700/60">
+                <span class="tab-number flex-shrink-0 w-8 h-8 rounded-lg bg-slate-800 text-brand-textMuted group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                    2
+                </span>
+                <span class="font-semibold text-sm sm:text-base text-white group-hover:text-brand-accent leading-snug">
+                    Producto genérico o básico
+                </span>
+            </button>
+
+            <button onclick="selectTab(2)" id="btn-2" class="tab-btn text-left p-4 rounded-xl border-l-4 border-transparent bg-brand-card hover:bg-slate-800 transition-all duration-200 flex items-center space-x-4 group border border-slate-700/60">
+                <span class="tab-number flex-shrink-0 w-8 h-8 rounded-lg bg-slate-800 text-brand-textMuted group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                    3
+                </span>
+                <span class="font-semibold text-sm sm:text-base text-white group-hover:text-brand-accent leading-snug">
+                    Producto esperado
+                </span>
+            </button>
+
+            <button onclick="selectTab(3)" id="btn-3" class="tab-btn text-left p-4 rounded-xl border-l-4 border-transparent bg-brand-card hover:bg-slate-800 transition-all duration-200 flex items-center space-x-4 group border border-slate-700/60">
+                <span class="tab-number flex-shrink-0 w-8 h-8 rounded-lg bg-slate-800 text-brand-textMuted group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                    4
+                </span>
+                <span class="font-semibold text-sm sm:text-base text-white group-hover:text-brand-accent leading-snug">
+                    Producto aumentado
+                </span>
+            </button>
+
+            <button onclick="selectTab(4)" id="btn-4" class="tab-btn text-left p-4 rounded-xl border-l-4 border-transparent bg-brand-card hover:bg-slate-800 transition-all duration-200 flex items-center space-x-4 group border border-slate-700/60">
+                <span class="tab-number flex-shrink-0 w-8 h-8 rounded-lg bg-slate-800 text-brand-textMuted group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                    5
+                </span>
+                <span class="font-semibold text-sm sm:text-base text-white group-hover:text-brand-accent leading-snug">
+                    Producto potencial
+                </span>
+            </button>
+        </nav>
+
+        <!-- Right Panel: Display Area -->
+        <section class="lg:col-span-8 bg-brand-card border border-slate-700/70 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden min-h-[520px]">
+            
+            <!-- Decorative Accent Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-teal via-brand-cyan to-brand-purple"></div>
+
+            <!-- Content Area Containers -->
+            <div class="relative w-full">
+                
+                <!-- Level 1 -->
+                <article id="panel-0" class="content-panel space-y-6">
+                    <div class="border-b border-slate-700/80 pb-4">
+                        <span class="text-brand-accent font-bold text-xs uppercase tracking-widest bg-brand-accent/10 px-3 py-1 rounded-md border border-brand-accent/20 inline-block mb-2">Nivel 1</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Beneficio central o producto básico</h2>
+                    </div>
+                    <div class="space-y-4 text-brand-textMain leading-relaxed text-base sm:text-lg">
+                        <p class="bg-slate-800/80 p-5 rounded-xl border-l-4 border-brand-accent text-slate-100 font-normal">
+                            El beneficio central corresponde a la necesidad principal que el cliente espera satisfacer al adquirir un producto o servicio. En este nivel, el valor no viene determinado por las características físicas, sino por la solución que representa para el comprador (Barria, 2024).
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            En el sector de la construcción, el beneficio esperado depende del tipo de cliente y de la oferta. La compra de una vivienda puede estar vinculada a la necesidad de un lugar donde vivir, pero también a la búsqueda de estabilidad o a la creación de patrimonio. En el caso de una bodega situada en un parque logístico, el enfoque puede centrarse en asegurar un espacio de almacenamiento adecuado y facilitar las operaciones de la empresa. Sin embargo, cuando se trata de una consultoría especializada, el cliente busca conocimientos y experiencia para resolver un problema, reducir la incertidumbre o tomar decisiones mejor fundamentadas.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            Identificar el beneficio que busca el cliente ayuda a definir con mayor precisión la propuesta de valor. Dos organizaciones pueden ofrecer productos o servicios similares y, sin embargo, satisfacer necesidades diferentes. Por ello, comprender el propósito de la compra para cada segmento es fundamental para determinar qué aspectos de la oferta deben priorizarse.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Level 2 -->
+                <article id="panel-1" class="content-panel hidden-panel space-y-6">
+                    <div class="border-b border-slate-700/80 pb-4">
+                        <span class="text-brand-accent font-bold text-xs uppercase tracking-widest bg-brand-accent/10 px-3 py-1 rounded-md border border-brand-accent/20 inline-block mb-2">Nivel 2</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Producto genérico o básico</h2>
+                    </div>
+                    <div class="space-y-4 text-brand-textMain leading-relaxed text-base sm:text-lg">
+                        <p class="bg-slate-800/80 p-5 rounded-xl border-l-4 border-brand-accent text-slate-100 font-normal">
+                            El producto básico abarca las características esenciales que satisfacen la necesidad identificada del cliente. Representa la forma más elemental de la oferta, previa a la incorporación de atributos o servicios adicionales que permitirían la diferenciación (Kotler, Keller & Chernev, 2022).
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            En una organización dedicada al desarrollo inmobiliario, este nivel puede estar representado por la configuración física y funcional indispensable de la vivienda: espacios habitables, estructura, instalaciones y demás componentes necesarios para cumplir su finalidad. En una empresa de consultoría, podría comprender la realización del estudio contratado y la entrega de los productos técnicos establecidos. En ambos casos, se trata de aquello que hace posible que la oferta cumpla su función principal.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            Desde la perspectiva del marketing, competir exclusivamente en este nivel limita las posibilidades de diferenciación, dado que las características básicas pueden ser ofrecidas también por otras organizaciones. Por esta razón, la construcción de una propuesta de valor competitiva requiere avanzar hacia atributos capaces de generar una percepción superior en el mercado.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Level 3 -->
+                <article id="panel-2" class="content-panel hidden-panel space-y-6">
+                    <div class="border-b border-slate-700/80 pb-4">
+                        <span class="text-brand-accent font-bold text-xs uppercase tracking-widest bg-brand-accent/10 px-3 py-1 rounded-md border border-brand-accent/20 inline-block mb-2">Nivel 3</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Producto esperado</h2>
+                    </div>
+                    <div class="space-y-4 text-brand-textMain leading-relaxed text-base sm:text-lg">
+                        <p class="bg-slate-800/80 p-5 rounded-xl border-l-4 border-brand-accent text-slate-100 font-normal">
+                            El producto esperado comprende el conjunto de atributos y condiciones que los clientes consideran normalmente necesarios al adquirir una determinada categoría de producto o servicio. Su ausencia puede generar insatisfacción, incluso cuando el producto cumple técnicamente con su función básica.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            En el sector de la construcción, estas expectativas pueden relacionarse con la calidad de los acabados, seguridad, funcionalidad, accesibilidad, cumplimiento normativo, disponibilidad de servicios, información transparente y cumplimiento de las condiciones comerciales ofrecidas. En servicios especializados pueden incluir oportunidad en la entrega, competencia profesional, confiabilidad de la información, comunicación efectiva y cumplimiento de los compromisos establecidos.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            El producto esperado se relaciona directamente con la confianza y la reputación organizacional. Cumplir estos atributos no necesariamente constituye una ventaja competitiva, pues muchos son considerados requisitos mínimos por el mercado; sin embargo, incumplirlos puede deteriorar significativamente la satisfacción del cliente y la percepción de la organización (Kotler, Keller & Chernev, 2022).
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Level 4 -->
+                <article id="panel-3" class="content-panel hidden-panel space-y-6">
+                    <div class="border-b border-slate-700/80 pb-4">
+                        <span class="text-brand-accent font-bold text-xs uppercase tracking-widest bg-brand-accent/10 px-3 py-1 rounded-md border border-brand-accent/20 inline-block mb-2">Nivel 4</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Producto aumentado</h2>
+                    </div>
+                    <div class="space-y-4 text-brand-textMain leading-relaxed text-base sm:text-lg">
+                        <p class="bg-slate-800/80 p-5 rounded-xl border-l-4 border-brand-accent text-slate-100 font-normal">
+                            El producto aumentado incorpora atributos, beneficios y servicios adicionales que superan las expectativas básicas del cliente y permiten diferenciar la oferta frente a sus competidores. Es precisamente en este nivel donde las organizaciones encuentran mayores oportunidades para construir ventajas mediante elementos que incrementan el valor percibido (Kotler, Keller & Chernev, 2022).
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            En las organizaciones del sector de la construcción, esta diferenciación puede materializarse mediante servicios posventa, garantías adicionales, personalización, soluciones digitales, acompañamiento especializado, características superiores de diseño, tecnologías inteligentes o atributos de sostenibilidad. Las certificaciones ambientales como LEED o EDGE, por ejemplo, pueden formar parte del producto aumentado cuando sus beneficios son reconocidos y valorados por el segmento de mercado al cual se dirige la oferta.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            Del mismo modo, la experiencia asociada a la compra puede revalorizar el producto. Las plataformas digitales de atención al cliente, los recorridos virtuales, la personalización de acabados, el soporte durante la entrega y los canales eficaces para la gestión de garantías pueden incrementar el valor percibido sin necesidad de alterar la función esencial del bien.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            Por consiguiente, el producto aumentado constituye un ámbito estratégico de diferenciación. La organización debe determinar qué atributos adicionales son realmente valorados por sus clientes y cuáles justifican los recursos necesarios para incorporarlos a su oferta.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Level 5 -->
+                <article id="panel-4" class="content-panel hidden-panel space-y-6">
+                    <div class="border-b border-slate-700/80 pb-4">
+                        <span class="text-brand-accent font-bold text-xs uppercase tracking-widest bg-brand-accent/10 px-3 py-1 rounded-md border border-brand-accent/20 inline-block mb-2">Nivel 5</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Producto potencial</h2>
+                    </div>
+                    <div class="space-y-4 text-brand-textMain leading-relaxed text-base sm:text-lg">
+                        <p class="bg-slate-800/80 p-5 rounded-xl border-l-4 border-brand-accent text-slate-100 font-normal">
+                            El producto potencial abarca las mejoras, transformaciones e innovaciones que podrían incorporarse a la oferta en el futuro para satisfacer las necesidades emergentes de los clientes o responder a los cambios del mercado (Kotler, Keller & Chernev, 2022).
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            En el sector de la construcción, este nivel se manifiesta en activos que permiten modificaciones o la integración gradual de nuevas soluciones. Entre los ejemplos se incluyen los sistemas modulares, la infraestructura preparada para la movilidad eléctrica, las tecnologías de automatización escalables y los edificios diseñados para integrar nuevos sistemas energéticos en una etapa posterior. Estas posibilidades permiten que un activo se adapte a nuevas formas de uso, amplíe sus capacidades o mejore su rendimiento con el paso del tiempo.
+                        </p>
+                        <p class="font-normal text-slate-200">
+                            Considerar el potencial del producto no implica añadir tecnologías o características sin tener en cuenta su utilidad. Más bien, conlleva identificar necesidades futuras y evaluar cómo la oferta podría satisfacerlas. Para una organización, esto supone detectar oportunidades de innovación que sean significativas para los clientes y que puedan implementarse en consonancia con las capacidades de la propia organización.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto w-full mt-10 pt-4 border-t border-slate-800 text-center text-xs text-brand-textMuted">
+        Interfaz Interactiva • Niveles de Producto en Estrategia de Mercadeo
+    </footer>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        function selectTab(index) {
+            const totalTabs = 5;
+            for (let i = 0; i < totalTabs; i++) {
+                const btn = document.getElementById(`btn-${i}`);
+                const panel = document.getElementById(`panel-${i}`);
+
+                if (i === index) {
+                    btn.classList.add('active');
+                    panel.classList.remove('hidden-panel');
+                } else {
+                    btn.classList.remove('active');
+                    panel.classList.add('hidden-panel');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
