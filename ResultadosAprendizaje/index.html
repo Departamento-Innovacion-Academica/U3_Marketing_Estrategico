@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Aprendizaje / Objetivos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0a0e17;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #f3f4f6;
+        }
+
+        /* Estilos personalizados para los botones circulares */
+        .btn-circle {
+            background-color: #054C50;
+            border: 2px solid #00779A;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(5, 76, 80, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-circle:hover {
+            transform: translate(-50%, -50%) scale(1.15) !important;
+            background-color: #00779A;
+            border-color: #38bdf8;
+            box-shadow: 0 0 25px rgba(0, 119, 154, 0.8), 0 0 10px rgba(56, 189, 248, 0.5);
+            z-index: 30;
+        }
+
+        .btn-circle:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.6);
+        }
+
+        /* Animación suave para el contenido modal */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9) translateY(10px);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            transition: all 0.25s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-teal-500 selection:text-white">
+
+    <!-- Encabezado -->
+    <header class="w-full py-6 px-4 text-center">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-300 to-sky-400 uppercase">
+            Resultados de Aprendizaje
+        </h1>
+        <p class="text-sm md:text-base text-gray-400 mt-2 font-medium">
+            Haga clic sobre los botones para ampliar la información
+        </p>
+    </header>
+
+    <!-- Área Principal de la Representación Circular -->
+    <main class="flex-grow flex items-center justify-center p-4 relative my-4">
+        
+        <!-- Anillo / Órbita Principal -->
+        <div id="circle-container" class="relative w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] md:w-[500px] md:h-[500px] rounded-full border border-teal-800/40 bg-slate-900/20 backdrop-blur-sm shadow-[0_0_50px_rgba(5,76,80,0.15)] flex items-center justify-center">
+            
+            <!-- Núcleo Central -->
+            <div class="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br from-[#054C50] to-[#00779A]/40 border-2 border-[#00779A] flex flex-col items-center justify-center text-center p-3 shadow-[0_0_30px_rgba(0,119,154,0.3)] z-10">
+                <span class="text-xs sm:text-sm md:text-base font-bold text-teal-200 tracking-wider uppercase">
+                    Marketing Digital
+                </span>
+            </div>
+
+            <!-- Botones Generados Dinámicamente alrededor de la circunferencia -->
+            <div id="buttons-holder" class="absolute inset-0"></div>
+        </div>
+    </main>
+
+    <!-- Modal Emergente -->
+    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div id="modal-card" class="bg-slate-900 border border-[#00779A]/60 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-[0_10px_40px_rgba(0,119,154,0.3)] relative modal-enter">
+            
+            <!-- Encabezado del Modal -->
+            <div class="flex items-center justify-between mb-5 border-b border-gray-800 pb-4">
+                <div class="flex items-center space-x-3">
+                    <span id="modal-badge" class="w-10 h-10 rounded-full bg-[#054C50] text-teal-200 flex items-center justify-center font-bold text-lg border border-[#00779A] shadow-md">
+                        1
+                    </span>
+                    <h3 id="modal-title" class="text-lg md:text-xl font-bold text-teal-300">
+                        Módulo 1
+                    </h3>
+                </div>
+                <button onclick="closeModal()" aria-label="Cerrar modal" class="text-gray-400 hover:text-white transition-colors text-3xl font-light focus:outline-none leading-none px-2 py-1 rounded-lg hover:bg-gray-800/60">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Contenido del Modal -->
+            <div class="my-4">
+                <p id="modal-text" class="text-gray-200 text-sm md:text-base leading-relaxed">
+                    Texto descriptivo del contenido...
+                </p>
+            </div>
+
+            <!-- Pie del Modal -->
+            <div class="flex justify-end mt-6 pt-3 border-t border-gray-800/60">
+                <button onclick="closeModal()" class="bg-[#054C50] hover:bg-[#00779A] text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-400">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Configuración y Posicionamiento Matemático -->
+    <script>
+        // Datos transcritos exactamente de las 8 tarjetas en orden
+        const itemsData = [
+            {
+                id: 1,
+                title: "Módulo 1",
+                text: "Analizar y estructurar productos y servicios de organizaciones del sector de la construcción a partir de sus diferentes niveles, atributos y beneficios, relacionándolos con las necesidades del mercado y la propuesta de valor de la organización."
+            },
+            {
+                id: 2,
+                title: "Módulo 2",
+                text: "Diferenciar las características de los productos y servicios dirigidos a mercados de consumo, empresariales e institucionales, identificando sus implicaciones para las decisiones comerciales de la organización."
+            },
+            {
+                id: 3,
+                title: "Módulo 3",
+                text: "Formular estrategias de fijación de precios considerando la estructura de costos, el valor percibido por el cliente, las condiciones competitivas y los objetivos comerciales y financieros de la organización."
+            },
+            {
+                id: 4,
+                title: "Módulo 4",
+                text: "Interpretar la elasticidad-precio de la demanda como herramienta para analizar la sensibilidad de diferentes segmentos frente a variaciones del precio y apoyar la toma de decisiones comerciales."
+            },
+            {
+                id: 5,
+                title: "Módulo 5",
+                text: "Relacionar el precio, el margen y el costo objetivo para evaluar la coherencia económica de la oferta y reconocer las implicaciones de estas variables sobre los resultados de la organización."
+            },
+            {
+                id: 6,
+                title: "Módulo 6",
+                text: "Analizar las particularidades de la fijación de precios en mercados B2B e institucionales, considerando las características de los procesos competitivos de contratación, la propuesta de valor y la exposición económica asociada con la oferta."
+            },
+            {
+                id: 7,
+                title: "Módulo 7",
+                text: "Diseñar estrategias de distribución y comercialización mediante la selección de canales directos, indirectos, digitales o híbridos, de acuerdo con las características del producto, el mercado objetivo y el comportamiento de los clientes."
+            },
+            {
+                id: 8,
+                title: "Módulo 8",
+                text: "Integrar estratégicamente las decisiones de producto, precio y distribución para estructurar propuestas de valor coherentes con el posicionamiento, las capacidades organizacionales y las condiciones competitivas del sector de la construcción."
+            }
+        ];
+
+        // Función para distribuir 8 botones en la circunferencia en sentido horario partiendo desde arriba/derecha
+        function renderCircularButtons() {
+            const container = document.getElementById('buttons-holder');
+            container.innerHTML = '';
+
+            const total = itemsData.length;
+            // Para posicionar en sentido horario ordenado de forma simétrica:
+            // Comenzamos en -45° o -90° (arriba a la derecha/arriba) y avanzamos paso a paso 360/8 = 45°
+            const startAngleDeg = -90; // Empezar arriba (12:00 en reloj) para flujo horario natural
+
+            itemsData.forEach((item, index) => {
+                const angleDeg = startAngleDeg + (index * (360 / total));
+                const angleRad = (angleDeg * Math.PI) / 180;
+
+                // Radio relativo en porcentaje (47% para alinearse con el borde del círculo contenedor)
+                const radiusPercent = 47; 
+                const x = 50 + radiusPercent * Math.cos(angleRad);
+                const y = 50 + radiusPercent * Math.sin(angleRad);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-circle absolute w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white font-extrabold text-base sm:text-xl md:text-2xl cursor-pointer';
+                btn.style.left = `${x}%`;
+                btn.style.top = `${y}%`;
+                btn.style.transform = 'translate(-50%, -50%)';
+                btn.setAttribute('onclick', `openModal(${item.id})`);
+                btn.setAttribute('aria-label', `Abrir ${item.title}`);
+                btn.innerHTML = `<span>${item.id}</span>`;
+
+                container.appendChild(btn);
+            });
+        }
+
+        // Funciones del Modal
+        const modal = document.getElementById('modal');
+        const modalCard = document.getElementById('modal-card');
+        const modalBadge = document.getElementById('modal-badge');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+
+        function openModal(id) {
+            const item = itemsData.find(i => i.id === id);
+            if (!item) return;
+
+            modalBadge.textContent = item.id;
+            modalTitle.textContent = item.title;
+            modalText.textContent = item.text;
+
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                modalCard.classList.add('modal-enter-active');
+            });
+        }
+
+        function closeModal() {
+            modalCard.classList.remove('modal-enter-active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Cierre con la tecla ESC o clic fuera del contenido
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Renderizado inicial
+        window.onload = renderCircularButtons;
+    </script>
+</body>
+</html>
