@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo de Mezcla de Mercadeo</title>
+  <!-- Fuente Google Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
+
+    /* BARRA DE CONTROLES SUPERIOR */
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .btn-control {
+      background-color: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .btn-control:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    /* CONTENEDOR DE TARJETAS TEAL */
+    .teal-cards-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      width: 100%;
+      padding: 0 1rem;
+    }
+
+    /* TARJETA TEAL */
+    .teal-card {
+      background-color: #007a87; /* Color teal exacto de la imagen */
+      border-radius: 18px;
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-align: left;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 8px 20px rgba(0, 122, 135, 0.2);
+      
+      /* Animaciones */
+      opacity: 0;
+      transform-origin: center left;
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                  box-shadow 0.3s ease, 
+                  background-color 0.3s ease;
+    }
+
+    /* Animación de entrada estilo Latigazo (Whip Elastic) */
+    .teal-card.animate-in {
+      animation: whipIn 0.75s cubic-bezier(0.68, -0.6, 0.32, 1.6) forwards;
+    }
+
+    .teal-card:nth-child(1) { animation-delay: 0.08s; }
+    .teal-card:nth-child(2) { animation-delay: 0.22s; }
+    .teal-card:nth-child(3) { animation-delay: 0.36s; }
+
+    /* Efectos Hover y Active */
+    .teal-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      background-color: #006b77;
+      box-shadow: 0 12px 28px rgba(0, 122, 135, 0.35);
+    }
+
+    .teal-card:active {
+      transform: translateY(-2px) scale(0.99);
+    }
+
+    /* TEXTO DE LA TARJETA */
+    .card-title {
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    .card-description {
+      color: #f0fdfa;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    /* ANIMACIÓN LATIGAZO (WHIP EFFECT) */
+    @keyframes whipIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-120px) scaleX(1.6) scaleY(0.6) skewX(-20deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translateX(25px) scaleX(0.85) scaleY(1.15) skewX(10deg);
+      }
+      75% {
+        transform: translateX(-8px) scaleX(1.05) scaleY(0.95) skewX(-3deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) scaleX(1) scaleY(1) skewX(0deg);
+      }
+    }
+
+    /* RESPONSIVO PARA PANTALLAS PEQUEÑAS */
+    @media (max-width: 850px) {
+      .teal-cards-container {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        gap: 1.25rem;
+      }
+
+      .teal-card {
+        padding: 1.75rem 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+      }
+
+      .card-description {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CONTROLES DE SONIDO Y REPETICIÓN -->
+  <div class="controls-bar">
+    <button class="btn-control" id="toggleSoundBtn">
+      <span id="soundIcon">🔊</span> <span id="soundLabel">Sonido Activado</span>
+    </button>
+    <button class="btn-control" id="replayBtn">
+      🔄 Reproducir Animación
+    </button>
+  </div>
+
+  <!-- CONTENEDOR DE LAS 3 TARJETAS -->
+  <div class="teal-cards-container">
+    <div class="teal-card animate-in" data-index="0">
+      <h3 class="card-title">Producto</h3>
+      <p class="card-description">define y configura el valor ofrecido</p>
+    </div>
+
+    <div class="teal-card animate-in" data-index="1">
+      <h3 class="card-title">Precio</h3>
+      <p class="card-description">establece el valor económico de la oferta</p>
+    </div>
+
+    <div class="teal-card animate-in" data-index="2">
+      <h3 class="card-title">Distribución</h3>
+      <p class="card-description">permite acercar la oferta al mercado</p>
+    </div>
+  </div>
+
+  <script>
+    // SISTEMA DE AUDIO DIGITAL SINTETIZADO (Web Audio API)
+    let audioCtx = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type, pitchMultiplier = 1) {
+      if (isMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'hover') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const baseFreq = 300 * pitchMultiplier;
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.2, now + 0.08);
+
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } 
+      else if (type === 'click') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(400 * pitchMultiplier, now);
+        osc.frequency.exponentialRampToValueAtTime(800 * pitchMultiplier, now + 0.12);
+
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.12);
+      }
+      else if (type === 'whip') {
+        const notes = [220, 587.33, 880];
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const noteTime = now + (idx * 0.12);
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, noteTime);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.5, noteTime + 0.1);
+
+          gain.gain.setValueAtTime(0, noteTime);
+          gain.gain.linearRampToValueAtTime(0.05, noteTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.12);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(noteTime);
+          osc.stop(noteTime + 0.12);
+        });
+      }
+    }
+
+    // EVENTOS EN LAS TARJETAS
+    const cards = document.querySelectorAll('.teal-card');
+
+    cards.forEach((card, index) => {
+      card.addEventListener('mouseenter', () => {
+        playSound('hover', 1 + (index * 0.15));
+      });
+
+      card.addEventListener('click', () => {
+        playSound('click', 1 + (index * 0.2));
+      });
+    });
+
+    // BOTÓN DE REPETIR ANIMACIÓN
+    const replayBtn = document.getElementById('replayBtn');
+    replayBtn.addEventListener('click', () => {
+      initAudio();
+      playSound('whip');
+
+      cards.forEach(card => {
+        card.classList.remove('animate-in');
+        void card.offsetWidth;
+        card.classList.add('animate-in');
+      });
+    });
+
+    // BOTÓN DE MUTE / UNMUTE
+    const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    const soundLabel = document.getElementById('soundLabel');
+
+    toggleSoundBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      if (isMuted) {
+        soundIcon.textContent = '🔇';
+        soundLabel.textContent = 'Silenciado';
+        toggleSoundBtn.style.opacity = '0.7';
+      } else {
+        soundIcon.textContent = '🔊';
+        soundLabel.textContent = 'Sonido Activado';
+        toggleSoundBtn.style.opacity = '1';
+        initAudio();
+        playSound('hover', 1.2);
+      }
+    });
+
+    window.addEventListener('click', () => {
+      initAudio();
+    }, { once: true });
+  </script>
+</body>
+</html>
